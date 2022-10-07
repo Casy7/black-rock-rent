@@ -62,7 +62,7 @@ def get_all_free_equipment():
                         equipment.name,
                         equipment.path,
                         equipment.description,
-                        equipment.price_per_day,
+                        equipment.price,
                         equipment.price_for_members,
                         equipment.number))
         # TODO Append filters to filter only free equipment
@@ -229,6 +229,27 @@ class AddNewEquipment(View):
             result["result"] = "success"
             result["newId"] = new_equipment.id
             
+        elif form["requestType"] == "update":
+            try:
+                equipment_id = int(form['obj[id]'])
+                eq_list = Equipment.objects.filter(id=equipment_id)
+                if eq_list:
+                    equipment = eq_list[0]
+                    equipment.name = form['obj[name]']
+                    equipment.path = form['obj[path]']
+                    equipment.description = form['obj[desc]']
+                    equipment.number = form['obj[amount]']
+                    equipment.unique = True if form['obj[amount]'] == '1' else False
+                    equipment.price = float(form['obj[price]'])//1
+                    equipment.price_per_day = float(form['obj[price]'])//10
+                    equipment.price_for_members = float(form['obj[price]'])//20
+                    equipment.save()
+                    result["result"] = "success"
+                else:
+                    result["result"] = "failture"
+            except:
+                pass
+        
         elif form["requestType"] == "remove":
             try:
                 equipment_id = int(form['obj[id]'])
