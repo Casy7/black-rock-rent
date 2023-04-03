@@ -3,80 +3,58 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/form.css' %}" />
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
 <div>
     {%csrf_token%}
 
     <div class="card-body">
-        {% for acc in accountings %}
-        <div class="card dark accounting-card">
-            <h4>Запись на группу</h4>
-            <div class="row">
-                <div class="col">
-                    <div>Ответственный за снар: </div>
-                </div>
-                <div class="col">
-                    <div class="confirmation-data">{{ acc.0.responsible_person.name }}</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div>Руководитель группы: </div>
-                </div>
-                <div class="col">
-                    <div class="confirmation-data">{{ acc.0.lead_name }}</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div>Тип похода: </div>
-                </div>
-                <div class="col">
-                    <div class="confirmation-data">{{ acc.0.type_of_hike }}</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div>Даты аренды снара: </div>
-                </div>
-                <div class="col">
-                    <div class="confirmation-data">{{ acc.1 }}</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div>Состав группы: </div>
-                </div>
-                <div class="col">
-                    <div class="confirmation-data" id=""></div>
-                </div>
-            </div>
-            <br>
-            <h4>Снаряжение</h4>
-            <!-- / -->
-
-            {% for eq in acc.2 %}
-            <div class="col selectedEquipmentTable">
-                <div class="row" id="CData`+ id + `">
-                    <div class="col CDataMainCol">
-                        {{ eq.equipment.name }}
-                    </div>
-                    <div class="col-sm CDataCol">
-                        {{ eq.amount }}шт.
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-            <!-- / -->
+        <h1>Добро пожаловать в BlackRock Rent!</h1>
+        <p>Мы предоставляем снаряжение для всех видов спортивного туризма. </p>
+        <div class="row">
             <div class="col">
-                <h4 id="priceCDataField">Итоговая амортизация: {{ acc.0.price }}₴</h4>
+                <p class="right">Наша команда ежедневно проводит ремонт и обслуживание снаряжения, и мы гарантируем
+                    качество и надёжность каждой
+                    его единицы.
+                </p>
+                <p class="right">
+                    Вы можете выбрать всё: от походной посуды до ледорубов и крючьев. Вы можете полностью укомплектовать
+                    группу и подготовиться
+                    к восхождению на самые сложные вершины с помощью нашей компании. Инструктора помогут подобрать и
+                    настроить снаряжение лично под вас.
+                </p>
+            </div>
+            <div class="col">
+                <img src="{% static 'images/home/equipment.bmp' %}" alt="">
             </div>
         </div>
+        <p>Вы можете заказать снаряжение на сайте или позвонив по номеру [Данные удалены], и к моменту вашего прибытия
+            снаряжение будет подготовлено.
+        </p>
 
-        {% endfor %}
+        <div class="row">
+            <div class="col">
+                <div id="map"></div>
+                <script src="{% static 'js/home.js' %}"></script>
+          
+            </div>
+            <div class="col">
+                <p class="left">Наш штаб находится на улице ДефолтНеймовская д.2. Мы открыты с 9:00 до 19:00 третьего числа 
+                    каждого месяца Синей луны по альтмерскому календарю, когда над морем восходит созвездие льва. Но сделать заказ вы можете в любое время!
+                </p>
+                <p class="left">
+                    Для этого просто нажмите на кнопку ниже:
+                </p>
+                <button class="btn btn-danger big-red-fucking-button">Заказать снаряжение!</button>
+            </div>
+
+        </div>
+
     </div>
 </div>
 
-</div>
+
+
 
 
 {% endblock %}

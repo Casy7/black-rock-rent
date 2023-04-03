@@ -25,7 +25,7 @@ def base_context(request, **args):
 
 def get_all_contacts():
     contacts = []
-    for contact in Contact.objects.all():
+    for contact in Users.objects.all():
         contacts.append((contact.id, contact.name, contact.phone_number))
     return contacts
 
@@ -72,12 +72,20 @@ def get_all_free_equipment():
 class HomePage(View):
     def get(self, request):
         context = base_context(request, title='Home')
-        group_accountings_list = list(
-            GroupAccounting.objects.order_by("-id")[:30])
+
+        return render(request, "home.html", context)
+    
+
+
+
+class HomePageOld(View):
+    def get(self, request):
+        context = base_context(request, title='Home')
+        group_accountings_list = list(RentAccounting.objects.order_by("-id"))
         group_accountings = list(map(lambda acc: (acc, beauty_date_interval(
             acc.start_date, acc.end_date), RentedEquipment.objects.filter(group_accounting=acc)), group_accountings_list))
         user_accountings_list = list(
-            UserAccounting.objects.order_by("-id")[:30])
+            RentAccounting.objects.order_by("-id")[:30])
         user_accountings = list(map(lambda acc: (acc, beauty_date_interval(
             acc.start_date, acc.end_date), RentedEquipment.objects.filter(group_accounting=acc)), user_accountings_list))
         context["accountings"] = user_accountings+group_accountings

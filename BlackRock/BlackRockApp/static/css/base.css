@@ -13,8 +13,12 @@ body {
     background-color: #1c1f22 !important;
 }
 
-h2 {
+h1, h2, p {
     color: white;
+}
+
+img {
+    max-width: 100%;
 }
 
 select {

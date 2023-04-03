@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}" />
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+<div>
+    {%csrf_token%}
+
+    <div class="card-body">
+        {% for acc in accountings %}
+        <div class="card dark accounting-card">
+            <h4>Запись на группу</h4>
+            <div class="row">
+                <div class="col">
+                    <div>Ответственный за снар: </div>
+                </div>
+                <div class="col">
+                    <div class="confirmation-data">{{ acc.0.responsible_person.name }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>Руководитель группы: </div>
+                </div>
+                <div class="col">
+                    <div class="confirmation-data">{{ acc.0.lead_name }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>Тип похода: </div>
+                </div>
+                <div class="col">
+                    <div class="confirmation-data">{{ acc.0.type_of_hike }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>Даты аренды снара: </div>
+                </div>
+                <div class="col">
+                    <div class="confirmation-data">{{ acc.1 }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>Состав группы: </div>
+                </div>
+                <div class="col">
+                    <div class="confirmation-data" id=""></div>
+                </div>
+            </div>
+            <br>
+            <h4>Снаряжение</h4>
+            <!-- / -->
+
+            {% for eq in acc.2 %}
+            <div class="col selectedEquipmentTable">
+                <div class="row" id="CData`+ id + `">
+                    <div class="col CDataMainCol">
+                        {{ eq.equipment.name }}
+                    </div>
+                    <div class="col-sm CDataCol">
+                        {{ eq.amount }}шт.
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- / -->
+            <div class="col">
+                <h4 id="priceCDataField">Итоговая амортизация: {{ acc.0.price }}₴</h4>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+</div>
+
+
+{% endblock %}

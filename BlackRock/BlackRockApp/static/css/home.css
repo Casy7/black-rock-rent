@@ -1,11 +1,46 @@
-.selectedEquipmentTable {
-    background-color: #262626;
-    padding-left: 5px;
+
+
+h1 {
+	font-size: 50px;
+	font-family: 'Roboto-Light', sans-serif;
+	text-align: center;
+	margin-bottom: 40px;
 }
 
-.accounting-card {
-    background-color: #37383c;
-    margin-bottom: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
+
+p {
+	font-size: 23px;
+	font-family: 'Roboto-Light', sans-serif;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+p.right {
+	text-align: right;
+}
+
+p.left {
+	text-align: left;
+}
+
+#map {
+	height: 400px; /* The height is 400 pixels */
+	width: 100%; /* The width is the width of the web page */
+  }
+  
+.row {
+	margin-bottom: 40px;
+}
+
+.big-red-fucking-button {
+	background-color: #f4363b;
+	border: 1px solid orange;
+	border-radius: 0px;
+	align-self: center;
+	font-size: 20px;
+}
+
+.big-red-fucking-button:hover {
+	background-color: #f45c36;
+	border: 1.3px solid yellow;
 }
