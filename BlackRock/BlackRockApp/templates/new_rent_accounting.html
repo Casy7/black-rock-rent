@@ -10,9 +10,6 @@
         {%csrf_token%}
         <div class="row">
 
-
-
-
             <!-- _______________________________________ TABS CONTROL PANEL _______________________________________ -->
 
             <div class="process">
@@ -30,7 +27,6 @@
                         <label for="btn-menu2">
                             <p><small>Подтверждение</small></p>
                         </label>
-                        <p><small></small></p>
                     </div>
                 </div>
             </div>
@@ -44,23 +40,6 @@
                 <!-- _______________________________________ HIKE PROPERTIES _______________________________________ -->
 
                 <div id="menu1" class="tab-pane fade active in">
-                    <div class="form-group">
-                        <label for="responsiblePersonLabel">Ответственное лицо</label><br>
-                        <select class="selectpicker dark dark-childs" data-live-search="true"
-                            id="userSelector" title="Выберите контакт" data-size="5">
-                            {% for user in contacts_list %}
-                            <option data-tokens="{{user.0}}" value="{{user.0}}" data-subtext="{{user.2}}">{{user.1}}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <br>
-                        <input type="hidden" name="responsiblePerson" id="userId">
-                        <small id="responsiblePersonHelp" class="form-text text-muted">Зам. по снару, руководитель или
-                            другой
-                            контакт,
-                            ответственный
-                            за взятый снар.</small>
-                    </div>
                     <label for="">Временные рамки</label>
                     <div class="row datepicker-row">
                         <div class="col">
@@ -117,7 +96,7 @@
 
                 <div id="menu2" class="tab-pane fade">
                     <h3>Проверьте правильность информации</h3>
-                    <div class="row"><p>Ответственный за снар: </p><p class="confirmation-data" id="responsiblePersonCDataField"></p></div>
+                    <div class="row"><p>Снаряжение: </p><p class="confirmation-data" id="responsiblePersonCDataField"></p></div>
                     
                 </div>
             </div>
@@ -139,10 +118,10 @@
 
 <div class="col steps-control-panel">
     <hr />
-    <button type="button" class="btn btn-info prev-step" disabled="true">Назад<i
+    <button type="button" class="btn btn-info red_btn prev-step " disabled="true">Назад<i
             class="fa fa-chevron-right"></i></button>
-    <button type="button" class="btn btn-info next-step">Далее<i class="fa fa-chevron-right"></i></button>
-    <button type="submit" class="btn btn-info last-step" style="display: none;">Завершить<i
+    <button type="button" class="btn btn-info next-step red_btn">Далее<i class="fa fa-chevron-right"></i></button>
+    <button type="submit" class="btn btn-info last-step red_btn" style="display: none;">Завершить<i
             class="fa fa-chevron-right"></i></button>
 </div>
 </form>

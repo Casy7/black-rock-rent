@@ -17,6 +17,36 @@ h1, h2, p {
     color: white;
 }
 
+h1 {
+    font-size: 50px;
+    font-family: 'Roboto-Light', sans-serif;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-size: 40px;
+    font-family: 'Roboto-Light', sans-serif;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+
+p {
+    font-size: 23px;
+    font-family: 'Roboto-Light', sans-serif;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+p.right {
+    text-align: right;
+}
+
+p.left {
+    text-align: left;
+}
+
 img {
     max-width: 100%;
 }
@@ -27,6 +57,36 @@ select {
 
 input[type="text"] {
     max-width: 30rem;
+}
+
+.navbar_background_image {
+    max-height: 60px;
+    position: fixed;
+    right: 0;
+}
+
+
+.big-red-fucking-button {
+    background-color: #f4363b;
+    border: 1px solid orange;
+    border-radius: 0px;
+    align-self: center;
+    font-size: 20px;
+}
+
+.big-red-fucking-button:hover {
+    background-color: #f45c36;
+    border: 1.3px solid yellow;
+}
+
+.red_btn {
+    background-color: #f4363b;
+    border: 1px solid orange;
+}
+
+.red_btn:hover {
+    background-color: #ee3000;
+    border: 1.3px solid yellow;
 }
 
 /* 

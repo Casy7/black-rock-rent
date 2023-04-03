@@ -55,16 +55,24 @@ def beauty_date_interval(date1: datetime, date2: datetime, show_year=False, show
     return result
 
 
+def get_cathegory_path(cathegory):
+    cathegory_path = cathegory.name
+    curr_cathegory = cathegory
+    while curr_cathegory.parent_cathegory != None:
+        curr_cathegory = curr_cathegory.parent_cathegory
+        cathegory_path = curr_cathegory.name + '/' + cathegory_path
+    return cathegory_path
+
+
 def get_all_free_equipment():
     eq_list = []
     for equipment in Equipment.objects.all():
         eq_list.append((equipment.id,
                         equipment.name,
-                        equipment.path,
+                        get_cathegory_path(equipment.cathegory),
                         equipment.description,
                         equipment.price,
-                        equipment.price_for_members,
-                        equipment.number))
+                        equipment.amount))
         # TODO Append filters to filter only free equipment
     return eq_list
 
@@ -72,11 +80,8 @@ def get_all_free_equipment():
 class HomePage(View):
     def get(self, request):
         context = base_context(request, title='Home')
-
         return render(request, "home.html", context)
     
-
-
 
 class HomePageOld(View):
     def get(self, request):
@@ -180,15 +185,15 @@ class AddGroupAccounting(View):
         return HttpResponseRedirect("/")
 
 
-class AddUserAccounting(View):
+class CreateNewRentAccounting(View):
     def get(self, request):
         context = base_context(
-            request, title='Записать снар на человека', header='Запись снаряжения на человека')
-        contacts_list = get_all_contacts()
+            request, title='Арендовать снаряжение', header='Арендовать снаряжение')
+        # contacts_list = get_all_contacts()
         eq_list = get_all_free_equipment()
         context['eq_list'] = eq_list
-        context['contacts_list'] = contacts_list
-        return render(request, "new_user_accounting.html", context)
+        # context['contacts_list'] = contacts_list
+        return render(request, "new_rent_accounting.html", context)
 
     def post(self, request):
         form = request.POST

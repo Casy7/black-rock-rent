@@ -88,7 +88,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'rentequipmentservicedb',
-        'USER': 'postgres',
+        'USER': 'django',
         'PASSWORD': DATABASE_PWD,
         'HOST': 'localhost',
         'PORT': '5432',
