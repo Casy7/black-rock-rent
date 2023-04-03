@@ -1,24 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Equipment(models.Model):
-	name = models.CharField(max_length=250, default='карабин')
-	path = models.CharField(max_length=50, default='горное')
-	unique = models.BooleanField(default=True)
-	number = models.IntegerField(default=1, blank=True)
-	price_per_day = models.IntegerField(default=0, blank=True)
-	price = models.IntegerField(default=0, blank=True)
-	price_for_members = models.IntegerField(default=0, blank=True)
-	description = models.CharField(max_length=1000, default='', null=True)
-
-
-class Contact(models.Model):
-	name = models.CharField(max_length=250, default='Смерека')
-	is_club_member = models.BooleanField(default=False)
-	phone_number = models.CharField(max_length=30, blank=True)
-
-
 TYPE_OF_HIKE = [
 	("ПВД", "noncategoried"),
 	("Лыжный", "лыжный"),
@@ -29,47 +11,94 @@ TYPE_OF_HIKE = [
 	("Вело", "вело"),
 ]
 
-TYPE_OF_ACCOUNTING = [
-	("UesrAccounting", "GroupAccounting"),
-	("GroupAccounting", "GroupAccounting")
-]
+
+class Cathegory(models.Model):
+    name = models.CharField(max_length=50)
+    parent_cathegory = models.ForeignKey('self', models.DO_NOTHING, db_column='parent_cathegory', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'cathegory'
 
 
-class GroupComposition(models.Model):
-	realMembers = models.IntegerField(default=0)
-	students = models.IntegerField(default=0)
-	newOnes = models.IntegerField(default=0)
-	others = models.IntegerField(default=0)
+class Equipment(models.Model):
+    name = models.CharField(max_length=50)
+    cathegory = models.ForeignKey(Cathegory, models.DO_NOTHING, db_column='cathegory')
+    price = models.DecimalField(max_digits=65535, decimal_places=65535)
+    img_path = models.CharField(max_length=350)
+    description = models.CharField(max_length=2000)
+    amount = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'equipment'
 
 
-class GroupAccounting(models.Model):
-	lead_name = models.CharField(max_length=250, default='Смерека')
-	type_of_hike = models.CharField(
-		max_length=15, choices=TYPE_OF_HIKE, default="ПВД")
-	responsible_person = models.ForeignKey(
-		Contact, null=True, default=None, related_name="responsible_person", on_delete=models.CASCADE)
-	group_composition = models.ForeignKey(GroupComposition, null=True, default=None, related_name="group", on_delete=models.CASCADE)
-	start_date = models.DateField(default="2021-01-02")
-	end_date = models.DateField(default="2021-01-02")
-	equipment = models.ManyToManyField(Equipment)
-	price = models.IntegerField(default=0, null=False)
-	archived = models.BooleanField(default=False)
+class OldPriceOfEquipment(models.Model):
+    equipment = models.OneToOneField(Equipment, models.DO_NOTHING, db_column='equipment', primary_key=True)
+    datetime = models.DateTimeField()
+    price = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'old_price_of_equipment'
+        unique_together = (('equipment', 'datetime'),)
 
 
-class UserAccounting(models.Model):
-	equipment = models.ManyToManyField(Equipment)
-	user = models.ForeignKey(
-		Contact, null=True, default=None, related_name="user", on_delete=models.CASCADE)
-	start_date = models.DateField(default="2021-01-02")
-	end_date = models.DateField(default="2021-01-02")
-	archived = models.BooleanField(default=False)
+class RentAccounting(models.Model):
+    username = models.ForeignKey('Users', models.DO_NOTHING, db_column='username')
+    comment = models.CharField(max_length=400)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    fact_start_date = models.DateTimeField(blank=True, null=True)
+    fact_end_date = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'rent_accounting'
+
+
+class RentedCountableEquipment(models.Model):
+    accounting = models.OneToOneField(RentAccounting, models.DO_NOTHING, db_column='accounting', primary_key=True)
+    equipment = models.ForeignKey(Equipment, models.DO_NOTHING, db_column='equipment')
+    amount = models.IntegerField()
+    returned_amount = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'rented_countable_equipment'
+        unique_together = (('accounting', 'equipment'),)
 
 
 class RentedEquipment(models.Model):
-	equipment = models.ForeignKey(Equipment, null=True, default=None, related_name="equipment", on_delete=models.CASCADE)
-	amount = models.IntegerField(default=1, blank=True)
-	type_of_accounting = models.CharField(max_length=15, choices=TYPE_OF_ACCOUNTING, default="GroupAccounting")
-	user_accounting = models.ForeignKey(
-		UserAccounting, null=True, default=None, on_delete=models.CASCADE)
-	group_accounting = models.ForeignKey(
-		GroupAccounting, null=True, default=None, on_delete=models.CASCADE)        
+    accounting = models.OneToOneField(RentAccounting, models.DO_NOTHING, db_column='accounting', primary_key=True)
+    deterioration = models.IntegerField()
+    equipment = models.ForeignKey(Equipment, models.DO_NOTHING, db_column='equipment')
+
+    class Meta:
+        managed = False
+        db_table = 'rented_equipment'
+        unique_together = (('accounting', 'equipment'),)
+
+
+class UniqueEquipment(models.Model):
+    id = models.OneToOneField(Equipment, models.DO_NOTHING, db_column='id', primary_key=True)
+    deterioration = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'unique_equipment'
+
+
+class Users(models.Model):
+    username = models.CharField(primary_key=True, max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(max_length=50, blank=True, null=True)
+    confidence_factor = models.IntegerField()
+    profile_approved = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'users'

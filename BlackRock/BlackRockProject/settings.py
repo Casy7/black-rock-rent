@@ -29,6 +29,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Password getting
+
+DATABASE_PWD = ""
+
+with open(os.path.join(BASE_DIR, 'BlackRockApp/secret.txt')) as f:
+    DATABASE_PWD = f.read().strip()
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,8 +86,12 @@ WSGI_APPLICATION = 'BlackRockProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'rentequipmentservicedb',
+        'USER': 'postgres',
+        'PASSWORD': DATABASE_PWD,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
