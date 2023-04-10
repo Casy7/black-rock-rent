@@ -107,7 +107,7 @@
 <body>
   <!-- __________________________________________ NAVBAR __________________________________________ -->
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">BlackRock</a>
 
@@ -120,10 +120,7 @@
           <a class="nav-link" href="/new_rent_accounting"><img class="glyphicon"
               src="{% static 'icons/give_to_a_person.svg' %}" style="max-width: 30px;"><span class="sr-only"></span></a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/signup"><img class="glyphicon" src="{% static 'icons/add_user_contact.svg' %}"
-              style="max-width: 30px;"><span class="sr-only"></span></a>
-        </li>
+
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -151,7 +148,8 @@
         {% if user != 'none' %}
         <li class="nav-item active">
           <a class="nav-link" href="/signout">
-            Logout
+            <img class="glyphicon white" src="{% static 'icons/sign_out.svg' %}">
+            <span class="sr-only"></span>
           </a>
         </li>
         {% endif %}
@@ -159,8 +157,17 @@
         {% if user == 'none' %}
         <li class="nav-item active">
           <a class="nav-link" href="/signin">
-            Login
+            <img class="glyphicon white" src="{% static 'icons/sign_in.svg' %}">
+            <span class="sr-only"></span>
           </a>
+        </li>
+        {% endif %}
+
+        {% if user == 'none' %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">
+            <img class="glyphicon white" src="{% static 'icons/sign_up.svg' %}">
+            <span class="sr-only"></span></a>
         </li>
         {% endif %}
 

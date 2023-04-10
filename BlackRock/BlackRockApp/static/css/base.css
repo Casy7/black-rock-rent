@@ -3,10 +3,12 @@
     margin-right: 20em; */
     background-color: #212529;
     width: 100rem;
+    padding-bottom: 89px;
 }
 
 body {
     background-color: #1b1f22;
+    margin-top: 54px;
 }
 
 .bg-dark {
@@ -29,6 +31,7 @@ h2 {
     font-family: 'Roboto-Light', sans-serif;
     text-align: center;
     margin-bottom: 40px;
+    padding-top: 40px;
 }
 
 
@@ -55,14 +58,13 @@ select {
     max-width: 30rem;
 }
 
-input[type="text"] {
-    max-width: 30rem;
-}
+
 
 .navbar_background_image {
     max-height: 60px;
     position: fixed;
     right: 0;
+    top: 0;
 }
 
 
@@ -104,4 +106,16 @@ input[type="text"] {
     width: 40px;
     -webkit-filter: invert(100%);
     filter: invert(100%);
+}
+
+.glyphicon.white {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+    max-width: 30px;
+}
+
+.user_credentials {
+    font-size: 20px;
+    margin-bottom: 0px;
+    margin-top: 7px;
 }

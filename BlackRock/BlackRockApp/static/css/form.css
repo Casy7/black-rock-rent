@@ -115,12 +115,14 @@ p.right {
     max-height: 26px;
     border: none;
 }
+
 .amount-selector:active, .amount-selector:hover {
     box-shadow: none;
     border: #333333;
     border-bottom: none;
-    
+
 }
+
 .amount-limit {
     float: inline-end;
     margin-bottom: 0px;
@@ -145,4 +147,25 @@ p.right {
 
 .form-radiobutton .rorm-radio-option {
     display: inline;
+}
+
+.form-radiobutton p {
+    font-size: 20px;
+}
+
+.input-group-prepend span {
+    height: 40px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.show_pwd_button {
+    height: 40px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.show_pwd_button i.fa-eye ::before {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
 }
