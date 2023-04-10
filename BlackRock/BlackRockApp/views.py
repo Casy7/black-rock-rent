@@ -1,7 +1,13 @@
 import json
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User, AnonymousUser
+
+
 from django.views.generic import View, TemplateView
 from django import forms
 from json import loads
@@ -9,9 +15,20 @@ from .models import *
 from datetime import date, timedelta, datetime
 
 
+def full_name(user):
+    if user.last_name != '' and user.first_name != '':
+        return user.first_name+' '+user.last_name
+    elif user.first_name != '':
+        return user.first_name
+    elif user.last_name != '':
+        return user.last_name
+    else:
+        return user.username
+
+
 def base_context(request, **args):
     context = {}
-    user = request.user
+    django_user = request.user
 
     context['title'] = 'none'
     context['header'] = 'none'
@@ -20,6 +37,19 @@ def base_context(request, **args):
     if args != None:
         for arg in args:
             context[arg] = args[arg]
+
+
+    if len(Users.objects.filter(username=django_user.username)) != 0 and type(request.user) != AnonymousUser:
+
+        user = Users.objects.get(username=django_user.username)
+        context['username'] = django_user.username
+        context['full_name'] = full_name(user)
+        context['user'] = user
+    else:
+        context['avatar'] = ''
+        context['username'] = 'Adminius'
+        context['user'] = 'none'
+
     return context
 
 
@@ -83,19 +113,112 @@ class HomePage(View):
         return render(request, "home.html", context)
     
 
-class HomePageOld(View):
-    def get(self, request):
-        context = base_context(request, title='Home')
-        group_accountings_list = list(RentAccounting.objects.order_by("-id"))
-        group_accountings = list(map(lambda acc: (acc, beauty_date_interval(
-            acc.start_date, acc.end_date), RentedEquipment.objects.filter(group_accounting=acc)), group_accountings_list))
-        user_accountings_list = list(
-            RentAccounting.objects.order_by("-id")[:30])
-        user_accountings = list(map(lambda acc: (acc, beauty_date_interval(
-            acc.start_date, acc.end_date), RentedEquipment.objects.filter(group_accounting=acc)), user_accountings_list))
-        context["accountings"] = user_accountings+group_accountings
-        return render(request, "home.html", context)
 
+
+
+
+
+
+class Registration(View):
+    def get(self, request):
+
+        context = base_context(
+            request, title='Sign Up', header='Sign Up', error=0)
+
+        return render(request, "signup.html", context)
+
+    def post(self, request):
+        context = {}
+        form = request.POST
+        user_props = {}
+        username = form['username']
+        password = form['password']
+
+        # new_post.author = Author.objects.get(id = request.POST.author)
+        # new_post.save()
+        user = User.objects.filter(username=username)
+        if list(user) == []:
+            for prop in form:
+                if prop not in ('csrfmiddlewaretoken', 'username', 'gender', 'phone_number') and form[prop] != '':
+                    user_props[prop] = form[prop]
+
+            # print(user_props)
+            User.objects.create_user(
+                username=form['username'], **user_props)
+            
+            custom_user = Users(
+                username =form['username'],
+                first_name = form['first_name'],
+                last_name = form['last_name'],
+                email = form['email'],
+                phone_number = form['phone_number'],
+                confidence_factor = 0,
+                profile_approved = False)
+            
+            custom_user.save()
+
+            user = authenticate(username=username, password=password)
+            login(request, user)
+
+            # print(form)
+            return HttpResponseRedirect("/")
+
+        else:
+            context = base_context(request, title='Sign Up',
+                                   header='Sign Up')
+
+            for field_name in form.keys():
+                context[field_name] = form[field_name]
+
+            context['error'] = 1
+            return render(request, "signup.html", context)
+    
+class Login(View):
+
+    def __init__(self):
+        self.error = 0
+
+    def get(self, request):
+
+        context = base_context(
+            request, title='Sign In', header='Sign In', error=0)
+        context['error'] = 0
+
+        # context['form'] = self.form_class()
+        return render(request, "signin.html", context)
+
+    def post(self, request):
+        context = {}
+        form = request.POST
+        # validation = UserForm(request.POST)
+        if True:  # validation.is_valid():
+            # print(form)
+            username = form['username']
+            password = form['password']
+
+            # new_post.author = Author.objects.get(id = request.POST.author)
+            # new_post.save()
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    context['name'] = username
+                    return HttpResponseRedirect("/")
+
+            else:
+                context = base_context(request)
+                logout(request)
+                context['error'] = 1
+                # return Posts.get(self,request)
+                return render(request, "signin.html", context)
+        else:
+            return HttpResponse("Data isn't valid")
+
+
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect("/")
 
 class CreateUser(View):
     def get(self, request):
@@ -126,10 +249,10 @@ class AddEquipment(View):
     def get(self, request):
         context = base_context(
             request, title='Добавить снаряжение', header='Добавить снаряжение')
-        contacts_list = get_all_contacts()
+        # contacts_list = get_all_contacts()
         eq_list = get_all_free_equipment()
         context['eq_list'] = eq_list
-        context['contacts_list'] = contacts_list
+        # context['contacts_list'] = contacts_list
         return render(request, "add_equpment.html", context)
 
 

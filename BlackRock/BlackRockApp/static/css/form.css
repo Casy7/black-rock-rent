@@ -124,6 +124,7 @@ p.right {
 .amount-limit {
     float: inline-end;
     margin-bottom: 0px;
+    font-size: 18px;
 }
 
 .datepicker {
@@ -138,3 +139,10 @@ p.right {
     color: orange;
 }
 
+.form-radiobutton {
+    display: ruby;
+}
+
+.form-radiobutton .rorm-radio-option {
+    display: inline;
+}

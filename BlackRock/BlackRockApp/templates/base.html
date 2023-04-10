@@ -3,8 +3,12 @@
 
 <head>
   {% load static %} {%csrf_token%}
-  <link crossorigin="anonymous" href="{% static 'libs/modules/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link crossorigin="anonymous" href="{% static 'libs/modules/bootstrap/dist/css/bootstrap.min.css' %}"
+    rel="stylesheet">
   <script crossorigin="anonymous" src="{% static 'libs/modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+
+
   <!-- TITLE AND PROPERTIES -->
   {% if title != 'none' %}
   <title>BR: {{ title }}</title>
@@ -49,41 +53,42 @@
       src: url("{% static 'libs/fonts/roboto/Roboto-Bold.ttf' %}") format("truetype");
     }
 
-    
-            @font-face {
-                font-family: "Roboto-Black-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-BlackItalic.ttf' %}") format("truetype");
-            }
 
-            @font-face {
-                font-family: "Roboto-Bold-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-BoldItalic.ttf' %}") format("truetype");
-            }
-            @font-face {
-                font-family: "Roboto-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-Italic.ttf' %}") format("truetype");
-            }
-    
-            @font-face {
-                font-family: "Roboto-Light-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-LightItalic.ttf' %}") format("truetype");
-            }
+    @font-face {
+      font-family: "Roboto-Black-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-BlackItalic.ttf' %}") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Roboto-Bold-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-BoldItalic.ttf' %}") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Roboto-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-Italic.ttf' %}") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Roboto-Light-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-LightItalic.ttf' %}") format("truetype");
+    }
 
 
-            @font-face {
-                font-family: "Roboto-Medium-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-MediumItalic.ttf' %}") format("truetype");
-            }
+    @font-face {
+      font-family: "Roboto-Medium-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-MediumItalic.ttf' %}") format("truetype");
+    }
 
-            @font-face {
-                font-family: "Roboto";
-                src: url("{% static 'libs/fonts/roboto/Roboto-Regular.ttf' %}") format("truetype");
-            }
+    @font-face {
+      font-family: "Roboto";
+      src: url("{% static 'libs/fonts/roboto/Roboto-Regular.ttf' %}") format("truetype");
+    }
 
-            @font-face {
-                font-family: "Roboto-Thin-Italic";
-                src: url("{% static 'libs/fonts/roboto/Roboto-ThinItalic.ttf' %}") format("truetype");
-            }
+    @font-face {
+      font-family: "Roboto-Thin-Italic";
+      src: url("{% static 'libs/fonts/roboto/Roboto-ThinItalic.ttf' %}") format("truetype");
+    }
 
     .new_header {
       font-family: "Roboto-Medium", "Roboto", "Roboto-Black", Tahoma;
@@ -106,41 +111,68 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="/">BlackRock</a>
 
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="display: ruby;">
-          <li class="nav-item active">
-            <a class="nav-link" href="/add_equipment"><img class="glyphicon"
-                src="{% static 'icons/add_equipment.svg' %}" style="max-width: 30px;"><span class="sr-only"></span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/user_accounting"><img class="glyphicon"
-                src="{% static 'icons/give_to_a_person.svg' %}" style="max-width: 30px;"><span
-                class="sr-only"></span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/new_contact"><img class="glyphicon"
-                src="{% static 'icons/add_user_contact.svg' %}" style="max-width: 30px;"><span
-                class="sr-only"></span></a>
-          </li>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="display: ruby;">
+        <li class="nav-item active">
+          <a class="nav-link" href="/add_equipment"><img class="glyphicon" src="{% static 'icons/add_equipment.svg' %}"
+              style="max-width: 30px;"><span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/new_rent_accounting"><img class="glyphicon"
+              src="{% static 'icons/give_to_a_person.svg' %}" style="max-width: 30px;"><span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup"><img class="glyphicon" src="{% static 'icons/add_user_contact.svg' %}"
+              style="max-width: 30px;"><span class="sr-only"></span></a>
+        </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Other
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Пока</a>
-              <a class="dropdown-item" href="#">Других</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Опций нет</a>
-            </div>
-          </li>
-        </ul>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Other
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Пока</a>
+            <a class="dropdown-item" href="#">Других</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Опций нет</a>
+          </div>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-right-panel">
+
+        {% if user != 'none' %}
+        <li class="nav-item active">
+          <p class="user_credentials"> ({{ user.username }}) {{ full_name }}</p>
+        </li>
+        {% endif %}
+
+
+        {% if user != 'none' %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/signout">
+            Logout
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user == 'none' %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/signin">
+            Login
+          </a>
+        </li>
+        {% endif %}
+
         <!-- <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form> -->
-        <img class="navbar_background_image" src="{% static 'icons/navbar_panel.svg' %}" alt="">
-      </div>
+        <li class="nav-item">
+          <img class="navbar_background_image" src="{% static 'icons/navbar_panel.svg' %}" alt="">
+        </li>
+      </ul>
+    </div>
   </nav>
 
 

@@ -99,3 +99,9 @@ input[type="text"] {
     }
 
 }
+
+.nav-item i {
+    width: 40px;
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}

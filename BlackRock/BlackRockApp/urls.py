@@ -32,6 +32,10 @@ urlpatterns = [
     path("group_accounting", AddGroupAccounting.as_view(), name="group_accounting"),
     path("new_rent_accounting", CreateNewRentAccounting.as_view(), name="new_rent_accounting"),
 	re_path('add_equipment/', AddNewEquipment.as_view(), name='add_equipment'),
+    
+    path("signin/", Login.as_view(), name="login"),
+    path("signout/", Logout.as_view(), name="logout"),
+    path("signup/", Registration.as_view(), name="registration"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
