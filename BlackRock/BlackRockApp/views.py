@@ -1,4 +1,5 @@
 import json
+import os
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -11,8 +12,14 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.views.generic import View, TemplateView
 from django import forms
 from json import loads
+
+from BlackRockProject.settings import BASE_DIR, DATABASE_PWD
 from .models import *
 from datetime import date, timedelta, datetime
+
+
+from .code.db_connect import DBConnection
+import psycopg
 
 
 def full_name(user):
@@ -113,12 +120,6 @@ class HomePage(View):
         return render(request, "home.html", context)
     
 
-
-
-
-
-
-
 class Registration(View):
     def get(self, request):
 
@@ -143,8 +144,9 @@ class Registration(View):
                     user_props[prop] = form[prop]
 
             # print(user_props)
-            User.objects.create_user(
+            auth_user = User.objects.create_user(
                 username=form['username'], **user_props)
+            
             
             custom_user = Users(
                 username =form['username'],
@@ -154,6 +156,15 @@ class Registration(View):
                 phone_number = form['phone_number'],
                 confidence_factor = 0,
                 profile_approved = False)
+            
+
+            with psycopg.connect("host=127.0.0.1 port=5432 dbname=rentequipmentservicedb user=django password="+DATABASE_PWD) as conn:
+                with conn.cursor() as cur:
+                    resp = cur.execute("""CREATE USER """+form['username']+""" PASSWORD '"""+auth_user.password+"""' IN ROLE single_user """)
+                    print(resp)
+                    pass
+
+
             
             custom_user.save()
 
@@ -173,6 +184,7 @@ class Registration(View):
             context['error'] = 1
             return render(request, "signup.html", context)
     
+
 class Login(View):
 
     def __init__(self):
@@ -220,6 +232,7 @@ class Logout(View):
         logout(request)
         return HttpResponseRedirect("/")
 
+
 class CreateUser(View):
     def get(self, request):
         context = base_context(
@@ -249,66 +262,13 @@ class AddEquipment(View):
     def get(self, request):
         context = base_context(
             request, title='Добавить снаряжение', header='Добавить снаряжение')
-        # contacts_list = get_all_contacts()
         eq_list = get_all_free_equipment()
         context['eq_list'] = eq_list
         # context['contacts_list'] = contacts_list
         return render(request, "add_equpment.html", context)
 
 
-class AddGroupAccounting(View):
-    def get(self, request):
-        context = base_context(
-            request, title='Записать снар на группу', header='Запись снаряжения на группу')
-        contacts_list = get_all_contacts()
-        eq_list = get_all_free_equipment()
-        context['eq_list'] = eq_list
-        context['contacts_list'] = contacts_list
-        return render(request, "new_group_accounting.html", context)
-
-    def post(self, request):
-        form = request.POST
-
-
-        group_composition = GroupComposition(
-            realMembers=form['realMembers'],
-            students=form['students'],
-            newOnes=form['newOnes'],
-            others=form['others']
-        )
-        group_composition.save()
-
-
-        group_accounting = GroupAccounting(
-            lead_name=form['leadName'],
-            type_of_hike=form['typeOfHike'],
-            responsible_person=Contact.objects.get(
-                id=form['responsiblePerson']),
-            group_composition = group_composition,
-            start_date=form['startDate'],
-            end_date=form['endDate'],
-            price=form['price'],
-            archived=False
-        )
-        group_accounting.save()
-
-
-        equipment_json = loads(form['equipmentJSON'])
-
-        for eqId in equipment_json:
-            rentedEq = RentedEquipment(
-                equipment=Equipment.objects.get(id=eqId),
-                amount=equipment_json[eqId],
-                type_of_accounting="GroupAccounting",
-                group_accounting=group_accounting
-            )
-            rentedEq.save()
-
-        group_accounting.save()
-        return HttpResponseRedirect("/")
-
-
-class CreateNewRentAccounting(View):
+class CreateNewRentAccounting(View, LoginRequiredMixin):
     def get(self, request):
         context = base_context(
             request, title='Арендовать снаряжение', header='Арендовать снаряжение')
@@ -323,26 +283,23 @@ class CreateNewRentAccounting(View):
 
         # TODO сделать чёртово добавление записи на участника
 
-        user_accounting = UserAccounting(
-            user=Contact.objects.get(
-                id=form['responsiblePerson']),
-            start_date=form['startDate'],
-            end_date=form['endDate'],
-            archived=False
-        )
-        user_accounting.save()
+        username = request.user.username
+        password = request.user.password
+
+        db_connection = DBConnection(username, password)
+        db_connection.create_accounting(form['start_date'], form['end_date'])
+
+
+
         equipment_json = loads(form['equipmentJSON'])
 
         for eqId in equipment_json:
-            rentedEq = RentedEquipment(
-                equipment=Equipment.objects.get(id=eqId),
-                amount=equipment_json[eqId],
-                type_of_accounting="GroupAccounting",
-                group_accounting=user_accounting
-            )
-            rentedEq.save()
+            equipment = Equipment.objects.get(id=eqId)
+            if equipment_json[eqId] == 1:                
+                db_connection.add_equipment_to_accounting(eqId)
+            else:
+                db_connection.add_countable_equipment_to_accounting(eqId, equipment_json[eqId])
 
-        user_accounting.save()
         return HttpResponseRedirect("/")
 
 

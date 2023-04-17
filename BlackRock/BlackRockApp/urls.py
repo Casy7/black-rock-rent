@@ -22,14 +22,13 @@ from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from BlackRockProject import settings
-from BlackRockApp import views
+
 from .views import *
 
 urlpatterns = [
     path("", HomePage.as_view(), name="home"),
     path("new_contact", CreateUser.as_view(), name="new_contact"),
     path("add_equipment", AddEquipment.as_view(), name="add_equipment"),
-    path("group_accounting", AddGroupAccounting.as_view(), name="group_accounting"),
     path("new_rent_accounting", CreateNewRentAccounting.as_view(), name="new_rent_accounting"),
 	re_path('add_equipment/', AddNewEquipment.as_view(), name='add_equipment'),
     
