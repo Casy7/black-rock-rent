@@ -1,5 +1,13 @@
 {
     "configurations": [
+        {
+            "name": "Firefox: Attach",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://127.0.0.1:8000/new_rent_accounting.html",
+            "webRoot": "${workspaceFolder}/BlackRockApp"
+        },
         
 
         {

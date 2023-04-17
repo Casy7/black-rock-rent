@@ -67,47 +67,30 @@ $(function () {
 });
 
 function updateData() {
-    // RESPONSIBLE PERSON
-    $("#responsiblePersonCDataField")[0].innerText = $(".filter-option-inner-inner")[0].innerText;
-    if ($(".filter-option-inner-inner")[0].innerText == "Выберите контакт") {
-        $("#responsiblePersonCDataField")[0].innerText = "Не выбрано";
-        $("#responsiblePersonCDataField").addClass("required-alert");
-    }
-    else {
-        $("#responsiblePersonCDataField").removeClass("required-alert");
-    }
-    // LEAD
-    $("#leadCDataField")[0].innerText = byId("leadInputField").value;
-    if ($("#leadCDataField")[0].innerText == "") {
-        $("#leadCDataField")[0].innerText = "Не выбрано";
-        $("#leadCDataField").addClass("required-alert");
-    }
-    else {
-        $("#leadCDataField").removeClass("required-alert");
-    }
-    // TYPE OF HIKE
-    $("#typeOfHikeCDataField")[0].innerText = byId("typeOfHikeSelector").value;
-    // TIME 
-    $("#datesOfRentCDataField")[0].innerText = beauty_date_interval(byId("start_day").value, byId("end_day").value);
-    console.log(3);
-    // MEMBERS
-    var newOnes = byId("newOnes").value;
-    var students = byId("students").value;
-    var realMembers = byId("realMembers").value;
-    var others = byId("others").value;
-    var total = parseInt(newOnes) + parseInt(students) + parseInt(realMembers) + parseInt(others);
-    $("#membersCounterCDataField")[0].innerText = "" + newOnes + "(НОВ) + " + students + "(СТУД) + " + realMembers + "(ДЧ) + " + others + "(ДР)" + " = " + total;
-    $("#selectedEquipmentCDataField .row").remove();
-    Array.from($(".tree-multiselect .selected")[0].childNodes).forEach(function (equipment) {
-        var dataCDataItem = $(equipment).clone();
-        var id = dataCDataItem[0].getAttribute("data-value");
-        // dataCDataItem[0].id = newId;
 
-        var text = dataCDataItem[0].childNodes[1].data;
-        var amount = byId("amount_" + id).value;
-        var price = $("#" + id + "selectedLine .price-col")[0].innerText;
-        // $(dataCDataItem).appendTo("#selectedEquipmentCDataField");
-        $("#selectedEquipmentCDataField").append($(`
+    
+
+    if (true == false) {
+        // TIME 
+        $("#datesOfRentCDataField")[0].innerText = beauty_date_interval(byId("start_day").value, byId("end_day").value);
+        console.log(3);
+        // MEMBERS
+        var newOnes = byId("newOnes").value;
+        var students = byId("students").value;
+        var realMembers = byId("realMembers").value;
+        var others = byId("others").value;
+        var total = parseInt(newOnes) + parseInt(students) + parseInt(realMembers) + parseInt(others);
+        $("#selectedEquipmentCDataField .row").remove();
+        Array.from($(".tree-multiselect .selected")[0].childNodes).forEach(function (equipment) {
+            var dataCDataItem = $(equipment).clone();
+            var id = dataCDataItem[0].getAttribute("data-value");
+            // dataCDataItem[0].id = newId;
+
+            var text = dataCDataItem[0].childNodes[1].data;
+            var amount = byId("amount_" + id).value;
+            var price = $("#" + id + "selectedLine .price-col")[0].innerText;
+            // $(dataCDataItem).appendTo("#selectedEquipmentCDataField");
+            $("#selectedEquipmentCDataField").append($(`
 
         <div class="row" id ="CData`+ id + `">
             <div class="col CDataMainCol">
@@ -123,15 +106,17 @@ function updateData() {
         </div> 
         `));
 
-    })
-    if ($("#selectedEquipmentCDataField")[0].childNodes.length < 2) {
-        $("#noEquipmentExceptionCDataField").show();
-        byId("isAnyEquipmentSelected").value = "";
+        })
+        if ($("#selectedEquipmentCDataField")[0].childNodes.length < 2) {
+            $("#noEquipmentExceptionCDataField").show();
+            byId("isAnyEquipmentSelected").value = "";
+        }
+        else {
+            $("#noEquipmentExceptionCDataField").hide();
+            byId("isAnyEquipmentSelected").value = "true";
+        }
     }
-    else {
-        $("#noEquipmentExceptionCDataField").hide();
-        byId("isAnyEquipmentSelected").value = "true";
-    }
+
 }
 
 function validateData(textIfValid, textIfNotValid) {

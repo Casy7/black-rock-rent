@@ -320,6 +320,9 @@ class CreateNewRentAccounting(View):
 
     def post(self, request):
         form = request.POST
+
+        # TODO сделать чёртово добавление записи на участника
+
         user_accounting = UserAccounting(
             user=Contact.objects.get(
                 id=form['responsiblePerson']),
