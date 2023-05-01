@@ -254,11 +254,8 @@ function send_new_equipment(requestType, objType, obj="") {
 			// alert(json);
 			// alert(json.exist);
 			if (json.result === "success") {
-				// byId(id_code).parentNode.removeChild(byId(id_code));
-				// count_notifications();
 				if (requestType == "add") {
 					new_id = "eq_"+json.new_id
-					// $("select#demo2 option[value='"+'new_eq_'+obj.id+"']")[0].value = newId;
 					$("select#demo2").append("<option readonly value='"+new_id+"' data-section='"+obj.path+"' selected='selected' data-description='"+obj.desc+"'>"+obj.name+"</option>");
 					prices[new_id] = [obj.price, obj.amount];
 				}

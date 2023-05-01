@@ -96,7 +96,19 @@ class DBConnection:
 										"INSERT INTO unique_equipment (id, deterioration) VALUES (%s, %s)", (new_equipment_id, 1))
 		
 		return new_equipment_id
+	
+	def update_equipment(self, equipment_id, new_equipment):
+		with psycopg.connect(self.get_connection_credentials()) as conn:
+			with conn.cursor() as cur:
+				result = cur.execute("UPDATE equipment SET name = %s, cathegory = %s, price = %s, img_path = %s, description = %s, amount = %s WHERE id = %s",
+				                     (new_equipment.name, self.get_cathegory_id(new_equipment.cathegory), new_equipment.price, './', new_equipment.description, new_equipment.amount, equipment_id))
 		
 
-
+	def delete_equipment(self, equipment_id):
+		with psycopg.connect(self.get_connection_credentials()) as conn:
+			with conn.cursor() as cur:
+				del_all_rented_equipment = cur.execute("DELETE FROM rented_equipment WHERE equipment = %s", [equipment_id])
+				del_all_rented_countable_equipment = cur.execute("DELETE FROM rented_countable_equipment WHERE equipment = %s", [equipment_id])
+				del_from_unique_equipment = cur.execute("DELETE FROM unique_equipment WHERE id = %s", [equipment_id])
+				result = cur.execute("DELETE FROM equipment WHERE id = %s", [equipment_id])
 					

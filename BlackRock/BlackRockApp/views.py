@@ -41,6 +41,7 @@ def base_context(request, **args):
     context['title'] = 'none'
     context['header'] = 'none'
     context['error'] = 0
+    context['is_superuser'] = False
 
     if args != None:
         for arg in args:
@@ -53,6 +54,10 @@ def base_context(request, **args):
         context['username'] = django_user.username
         context['full_name'] = full_name(user)
         context['user'] = user
+
+        if request.user.is_superuser:
+            context['is_superuser'] = True
+
     else:
         context['avatar'] = ''
         context['username'] = 'Adminius'
@@ -263,7 +268,7 @@ class AddEquipment(View, LoginRequiredMixin):
         if request.user.is_superuser:
             
             context = base_context(
-                request, title='Добавить снаряжение', header='Добавить снаряжение')
+                request, title='Add an equipment', header='Add an equipment')
             eq_list = get_all_free_equipment()
             context['eq_list'] = eq_list
             # context['contacts_list'] = contacts_list
@@ -333,44 +338,38 @@ class AddNewEquipment(View, LoginRequiredMixin):
         result = {}
         result["result"] = "failture"
 
-        if form["requestType"] == "add":
-            new_equipment = NewEquipment(form['obj[name]'], form['obj[path]'], form['obj[desc]'], form['obj[price]'], form['obj[amount]'])
-            username = request.user.username
-            password = request.user.password
-            db_connection = DBConnection(username, password)
-            new_equipment_id = db_connection.create_new_equipment(new_equipment)
+        username = request.user.username
+        password = request.user.password
+        db_connection = DBConnection(username, password)
 
-            result['new_id'] = new_equipment_id
-            result["result"] = "success"
-            
+        if form["requestType"] == "add":
+            try:
+                new_equipment = NewEquipment(form['obj[name]'], form['obj[path]'], form['obj[desc]'], form['obj[price]'], form['obj[amount]'])
+                new_equipment_id = db_connection.create_new_equipment(new_equipment)
+
+                result['new_id'] = new_equipment_id
+                result["result"] = "success"
+            except:
+                result["result"] = "failture"
+
         elif form["requestType"] == "update":
             try:
                 equipment_id = int(form['obj[id]'])
-                eq_list = Equipment.objects.filter(id=equipment_id)
-                if eq_list:
-                    equipment = eq_list[0]
-                    equipment.name = form['obj[name]']
-                    equipment.path = form['obj[path]']
-                    equipment.description = form['obj[desc]']
-                    equipment.number = form['obj[amount]']
-                    equipment.unique = True if form['obj[amount]'] == '1' else False
-                    equipment.price = float(form['obj[price]'])//1
-                    equipment.price_per_day = float(form['obj[price]'])//10
-                    equipment.price_for_members = float(form['obj[price]'])//20
-                    equipment.save()
-                    result["result"] = "success"
-                else:
-                    result["result"] = "failture"
+                updated_equipment = NewEquipment(form['obj[name]'], form['obj[path]'], form['obj[desc]'], form['obj[price]'], form['obj[amount]'])
+
+                db_connection.update_equipment(equipment_id, updated_equipment)
+                result["result"] = "success"
             except:
-                pass
+                result["result"] = "failture"
         
         elif form["requestType"] == "remove":
             try:
                 equipment_id = int(form['obj[id]'])
-                Equipment.objects.filter(id=equipment_id).delete()
+                db_connection.delete_equipment(equipment_id)
+
                 result["result"] = "success"
             except:
-                pass
+                result["result"] = "failture"
             
         return HttpResponse(
             json.dumps(result),
@@ -378,3 +377,14 @@ class AddNewEquipment(View, LoginRequiredMixin):
         )
 
 
+class AllRentAccountings(View, LoginRequiredMixin):
+    def get(self, request):
+        context = base_context(request, title='All rent accountings', header='Записи аренды')
+        
+        username = request.user.username
+        password = request.user.password
+        db_connection = DBConnection(username, password)
+        accountings = db_connection.get_all_user_accountings()
+        context['accountings'] = accountings
+        
+        return render(request, "rent_accountings_management.html", context)
