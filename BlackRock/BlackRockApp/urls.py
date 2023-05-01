@@ -30,6 +30,7 @@ urlpatterns = [
     path("new_contact", CreateUser.as_view(), name="new_contact"),
     path("add_equipment", AddEquipment.as_view(), name="add_equipment"),
     path("new_rent_accounting", CreateNewRentAccounting.as_view(), name="new_rent_accounting"),
+    path("my_rent_accountings", MyRentAccountings.as_view(), name="my_rent_accountings"),
 	re_path('add_equipment/', AddNewEquipment.as_view(), name='add_equipment'),
     
     path("signin/", Login.as_view(), name="login"),

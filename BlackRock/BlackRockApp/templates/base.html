@@ -117,11 +117,19 @@
           <a class="nav-link" href="/add_equipment"><img class="glyphicon" src="{% static 'icons/add_equipment.svg' %}"
               style="max-width: 30px;"><span class="sr-only"></span></a>
         </li>
+
+        {% if user != 'none' %}
         <li class="nav-item active">
           <a class="nav-link" href="/new_rent_accounting"><img class="glyphicon"
               src="{% static 'icons/give_to_a_person.svg' %}" style="max-width: 30px;"><span class="sr-only"></span></a>
         </li>
-
+        {% endif %}
+        
+        {% if user != 'none' %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/my_rent_accountings">My accountings</a>
+        </li>
+        {% endif %}
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -133,6 +141,7 @@
             <a class="dropdown-item" href="#">Других</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">Опций нет</a>
+            <a class="dropdown-item" href="/admin">Admin</a>
           </div>
         </li>
       </ul>

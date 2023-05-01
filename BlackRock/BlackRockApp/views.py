@@ -12,6 +12,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.views.generic import View, TemplateView
 from django import forms
 from json import loads
+from BlackRockApp.code.classes import NewEquipment
 
 from BlackRockProject.settings import BASE_DIR, DATABASE_PWD
 from .models import *
@@ -108,8 +109,8 @@ def get_all_free_equipment():
                         equipment.name,
                         get_cathegory_path(equipment.cathegory),
                         equipment.description,
-                        equipment.price,
-                        equipment.amount))
+                        float(equipment.price),
+                        int(equipment.amount)))
         # TODO Append filters to filter only free equipment
     return eq_list
 
@@ -202,29 +203,24 @@ class Login(View):
     def post(self, request):
         context = {}
         form = request.POST
-        # validation = UserForm(request.POST)
-        if True:  # validation.is_valid():
-            # print(form)
-            username = form['username']
-            password = form['password']
 
-            # new_post.author = Author.objects.get(id = request.POST.author)
-            # new_post.save()
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    context['name'] = username
-                    return HttpResponseRedirect("/")
+        username = form['username']
+        password = form['password']
 
-            else:
-                context = base_context(request)
-                logout(request)
-                context['error'] = 1
-                # return Posts.get(self,request)
-                return render(request, "signin.html", context)
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                context['name'] = username
+                return HttpResponseRedirect("/")
+
         else:
-            return HttpResponse("Data isn't valid")
+            context = base_context(request, title='Sign In', header='Sign In')
+            logout(request)
+            context['error'] = 1
+            # return Posts.get(self,request)
+            return render(request, "signin.html", context)
 
 
 class Logout(View):
@@ -258,38 +254,50 @@ class CreateUser(View):
         return HttpResponseRedirect("/new_contact")
 
 
-class AddEquipment(View):
+class AddEquipment(View, LoginRequiredMixin):
     def get(self, request):
-        context = base_context(
-            request, title='Добавить снаряжение', header='Добавить снаряжение')
-        eq_list = get_all_free_equipment()
-        context['eq_list'] = eq_list
-        # context['contacts_list'] = contacts_list
-        return render(request, "add_equpment.html", context)
+
+        if request.user.is_anonymous:
+            return HttpResponseRedirect("/")
+        
+        if request.user.is_superuser:
+            
+            context = base_context(
+                request, title='Добавить снаряжение', header='Добавить снаряжение')
+            eq_list = get_all_free_equipment()
+            context['eq_list'] = eq_list
+            # context['contacts_list'] = contacts_list
+            return render(request, "add_equpment.html", context)
+        
+        else:
+            return HttpResponseRedirect("/")
 
 
 class CreateNewRentAccounting(View, LoginRequiredMixin):
     def get(self, request):
+
+        if request.user.is_anonymous:
+            return HttpResponseRedirect("/")
+        
         context = base_context(
             request, title='Арендовать снаряжение', header='Арендовать снаряжение')
-        # contacts_list = get_all_contacts()
         eq_list = get_all_free_equipment()
         context['eq_list'] = eq_list
-        # context['contacts_list'] = contacts_list
         return render(request, "new_rent_accounting.html", context)
+            
 
     def post(self, request):
-        form = request.POST
 
-        # TODO сделать чёртово добавление записи на участника
+        if request.user.is_anonymous:
+            return HttpResponseRedirect("/")
+
+        form = request.POST
 
         username = request.user.username
         password = request.user.password
-
         db_connection = DBConnection(username, password)
+
         db_connection.create_accounting(form['start_date'], form['end_date'])
-
-
 
         equipment_json = loads(form['equipmentJSON'])
 
@@ -303,7 +311,21 @@ class CreateNewRentAccounting(View, LoginRequiredMixin):
         return HttpResponseRedirect("/")
 
 
-class AddNewEquipment(View):
+class MyRentAccountings(View, LoginRequiredMixin):
+    def get(self, request):
+        context = base_context(request, title='Your rent accountings', header='Записи аренды')
+        
+        username = request.user.username
+        password = request.user.password
+        db_connection = DBConnection(username, password)
+        accountings = db_connection.get_all_user_accountings()
+        context['accountings'] = accountings
+        
+        return render(request, "my_rent_accountings.html", context)
+
+
+class AddNewEquipment(View, LoginRequiredMixin):
+
     def post(self, request):
         req = request
         form = request.POST
@@ -312,18 +334,14 @@ class AddNewEquipment(View):
         result["result"] = "failture"
 
         if form["requestType"] == "add":
-            new_equipment = Equipment()
-            new_equipment.name = form['obj[name]']
-            new_equipment.path = form['obj[path]']
-            new_equipment.description = form['obj[desc]']
-            new_equipment.number = form['obj[amount]']
-            new_equipment.unique = True if form['obj[amount]'] == '1' else False
-            new_equipment.price = float(form['obj[price]'])//1
-            new_equipment.price_per_day = float(form['obj[price]'])//10
-            new_equipment.price_for_members = float(form['obj[price]'])//20
-            new_equipment.save()
+            new_equipment = NewEquipment(form['obj[name]'], form['obj[path]'], form['obj[desc]'], form['obj[price]'], form['obj[amount]'])
+            username = request.user.username
+            password = request.user.password
+            db_connection = DBConnection(username, password)
+            new_equipment_id = db_connection.create_new_equipment(new_equipment)
+
+            result['new_id'] = new_equipment_id
             result["result"] = "success"
-            result["newId"] = new_equipment.id
             
         elif form["requestType"] == "update":
             try:

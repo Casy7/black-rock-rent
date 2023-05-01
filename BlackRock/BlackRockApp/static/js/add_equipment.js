@@ -21,9 +21,8 @@ $(function () {
 	updatePrices();
 	$("[data-description='Folder']").hide();
 
-
-
 });
+
 
 
 
@@ -33,8 +32,14 @@ function getPath(element) {
 	el_parent = element;
 	while (el_parent.nodeName != "BODY") {
 	  if (el_parent.className.search("section") != -1) {
-		elParentCat = $(el_parent).children('.title')[0].innerText;
-		// console.log(elParentCat);
+		if ($(el_parent).children('.title').length > 0) 
+		{
+			elParentCat = $(el_parent).children('.title')[0].innerText;
+		}
+		else {
+			elParentCat = $(el_parent).children('div.flex-title').children('.title')[0].innerText;
+		}
+		
 		if (obj_path == "") {
 		  obj_path = elParentCat;
 		}
@@ -252,10 +257,10 @@ function send_new_equipment(requestType, objType, obj="") {
 				// byId(id_code).parentNode.removeChild(byId(id_code));
 				// count_notifications();
 				if (requestType == "add") {
-					newId = "eq_"+json.newId
+					new_id = "eq_"+json.new_id
 					// $("select#demo2 option[value='"+'new_eq_'+obj.id+"']")[0].value = newId;
-					$("select#demo2").append("<option readonly value='"+newId+"' data-section='"+obj.path+"' selected='selected' data-description='"+obj.desc+"'>"+obj.name+"</option>");
-					prices[ "eq_"+json.newId] = [obj.price, obj.amount];
+					$("select#demo2").append("<option readonly value='"+new_id+"' data-section='"+obj.path+"' selected='selected' data-description='"+obj.desc+"'>"+obj.name+"</option>");
+					prices[new_id] = [obj.price, obj.amount];
 				}
 				else if (requestType == "update") {
 					itemOption = $("select#demo2")[0].querySelector("option[value='eq_"+obj.id+"']")

@@ -5,12 +5,27 @@
 <link rel="stylesheet" href="{% static 'css/form.css' %}" />
 <link rel="stylesheet" href="{% static 'css/add_equipment.css' %}" />
 <script>
+    function collapse_folder() {
+      if ($(this).parent().parent().hasClass("collapsed")) {
+        $(this).parent().parent().removeClass("collapsed");
+      }
+      else {
+
+        $(this).parent().parent().addClass("collapsed");
+      }
+    };
+
   function addCatButton() {
 	$(".tree-multiselect div.section").toArray().forEach(addButtonsToFolder);
 
     function addButtonsToFolder(element) {
       obj_path = getPath(element);
-      $(element.firstChild).after(`<div class='item addCat'><a type='button' onclick="createNewFolderMenu('` + obj_path + `')"><img class="folder-icon" src="{% static 'icons/new_folder.svg' %}"></a><p class='p-tab'>/</p><a type='button' onclick="createNewItemMenu('` + obj_path + `')"><img class="add-item-btn" src="{% static 'icons/add_equipment.svg' %}"></a></div>`);
+      var title = $(element.firstChild);
+      var title_container = $(`<div class="flex-title gray"></div>`);
+      title.before(title_container);
+      title.on("click", collapse_folder);
+      title_container.append(title);
+      title_container.append(`<div class='item addCat'><a type='button' onclick="createNewFolderMenu('` + obj_path + `')"><img class="folder-icon" src="{% static 'icons/new_folder.svg' %}"></a><p class='p-tab'>/</p><a type='button' onclick="createNewItemMenu('` + obj_path + `')"><img class="add-item-btn" src="{% static 'icons/add_equipment.svg' %}"></a></div>`);
     }
   }
   function editItemMenu(obj) {
@@ -44,11 +59,12 @@
         line.id = eqId + "line";
         sName = line.querySelector('.section-name');        
         $('#' + line.id).append(`<span id="del_` + eqId + `" class='edit-col'><a type="button" onclick=deleteEquipment('` + eqId + `')><img class="delete-icon" src="{% static 'icons/delete_item.svg' %}"></a></span>`);
-        $('#' + line.id).append("<span class='number-col'>" + amount + "шт.</span>");
+        $('#' + line.id).append("<span class='number-col'>" + amount + " шт.</span>");
         $('#' + line.id).append("<span class='price-col'>" + price + "₴\t</span>");
       }
     }
   }
+
 </script>
 <div>
 
@@ -72,7 +88,7 @@
           "eq_34237": [0,0],
           "eq_34238": [0,0],
           //{% for equipment in eq_list %} 
-          "eq_{{equipment.0}}": ["{{equipment.4}}", "{{equipment.6}}"], {% endfor %}
+          "eq_{{equipment.0}}": ["{{equipment.4}}", "{{equipment.5}}"], {% endfor %}
         };
       </script>
 

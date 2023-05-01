@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<link rel="stylesheet" href="{% static 'css/my_rent_accountings.css' %}" />
+
+<div>
+    {%csrf_token%}
+    <div class="container">
+        {% for acc in accountings %}
+        <div class="card bg-dark">
+            <div class="card-body">
+                <p>{{ acc.start_date }} - {{ acc.end_date }}</p>
+
+                {% for eq in acc.equipment_list %}
+                <div class="row equipment_row">
+                    <div class="col">
+                        <p>{{ eq.name }}</p>
+                    </div>
+                    <div class="col">
+                        <p>{{ eq.price }}₴</p>
+                    </div>      
+                    <div class="col">
+                        <p>{{ eq.amount }}шт.</p>
+                    </div>                                     
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        
+    </div>
+
+</div>
+
+
+{% endblock %}
