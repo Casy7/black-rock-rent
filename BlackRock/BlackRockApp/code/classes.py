@@ -1,3 +1,5 @@
+from .data_conventers import *
+
 class UserRentedUniqueEquipment:
 	def __init__(self, id, name, cathegory, price, amount):
 		self.id = id

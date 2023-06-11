@@ -19,7 +19,7 @@ from .models import *
 from datetime import date, timedelta, datetime
 
 
-from .code.db_connect import DBConnection
+from .code.db_connect import *
 import psycopg
 
 
@@ -282,7 +282,7 @@ class CreateNewRentAccounting(View, LoginRequiredMixin):
     def get(self, request):
 
         if request.user.is_anonymous:
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect("/signin")
         
         context = base_context(
             request, title='Арендовать снаряжение', header='Арендовать снаряжение')
@@ -324,6 +324,7 @@ class MyRentAccountings(View, LoginRequiredMixin):
         password = request.user.password
         db_connection = DBConnection(username, password)
         accountings = db_connection.get_all_user_accountings()
+
         context['accountings'] = accountings
         
         return render(request, "my_rent_accountings.html", context)
@@ -377,14 +378,62 @@ class AddNewEquipment(View, LoginRequiredMixin):
         )
 
 
-class AllRentAccountings(View, LoginRequiredMixin):
+class RentAccountingsManagement(View, LoginRequiredMixin):
     def get(self, request):
+
+        if request.user.is_anonymous:
+            return HttpResponseRedirect("/")
+        
         context = base_context(request, title='All rent accountings', header='Записи аренды')
         
         username = request.user.username
         password = request.user.password
         db_connection = DBConnection(username, password)
-        accountings = db_connection.get_all_user_accountings()
-        context['accountings'] = accountings
+
+        context['accountings'] = db_connection.get_all_accountings()
         
         return render(request, "rent_accountings_management.html", context)
+    
+
+
+class SetRentTime(View, LoginRequiredMixin):
+
+    def post(self, request):
+        req = request
+        form = request.POST
+
+        result = {}
+        result["result"] = "failture"
+
+        username = request.user.username
+        password = request.user.password
+        db_connection = DBConnection(username, password)
+
+        if form["requestType"] == "setStart":
+            try:
+                time_of_rent = datetime.datetime.now()
+                execute = db_connection.set_fact_start_accounting_date(int(form['accounting_id']), time_of_rent)
+
+                result['time_of_start_rent'] = beauty_date(time_of_rent)
+                result["result"] = "success"
+            except:
+                result["result"] = "failture"
+
+        elif form["requestType"] == "setEnd":
+            try:
+                time_of_rent = datetime.datetime.now()
+                execute = db_connection.set_fact_end_accounting_date(int(form['accounting_id']), time_of_rent)
+
+                result['time_of_end_rent'] = beauty_date(time_of_rent)
+                result["result"] = "success"
+            except:
+                result["result"] = "failture"
+        
+        else:
+            result["result"] = "failture"
+            
+        return HttpResponse(
+            json.dumps(result),
+            content_type="application/json"
+        )
+

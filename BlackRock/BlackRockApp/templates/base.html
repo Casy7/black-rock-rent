@@ -102,7 +102,7 @@
   <link href="{% static 'css/base.css'%}" rel="stylesheet">
   <link href="{% static 'libs/modules/multiselect/jquery.tree-multiselect.css'%}" rel="stylesheet">
   <script src="{% static 'libs/modules/jquery/jquery.js' %}" type="text/javascript"></script>
-  <link rel="shortcut icon" href="{% static 'icons/add_equipment.svg'%}">
+  <link rel="shortcut icon" href="{% static 'icons/logo_mini.svg'%}">
 </head>
 
 <body>
@@ -110,7 +110,8 @@
 
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">BlackRock</a>
+
+      <a class="navbar-brand" href="/"><img class="base_logo_mini" src="{% static 'icons/logo_mini.svg' %}"></a>
 
       <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="display: ruby;">
 
@@ -127,7 +128,13 @@
               src="{% static 'icons/give_to_a_person.svg' %}" style="max-width: 30px;"><span class="sr-only"></span></a>
         </li>
         {% endif %}
-        
+
+        {% if is_superuser %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/rent_accountings_management">Manage</a>
+        </li>
+        {% endif %}
+
         {% if user != 'none' %}
         <li class="nav-item active">
           <a class="nav-link" href="/my_rent_accountings">My accountings</a>
@@ -140,11 +147,12 @@
             Other
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Пока</a>
-            <a class="dropdown-item" href="#">Других</a>
+            <a class="dropdown-item" href="#">There</a>
+            <a class="dropdown-item" href="#">are no</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Опций нет</a>
-            <a class="dropdown-item" href="/admin">Admin</a>
+            <a class="dropdown-item" href="#">other choices</a>
+            <a class="dropdown-item" href="#">except</a>
+            <a class="dropdown-item" href="/admin">Admin panel</a>
           </div>
         </li>
       </ul>
@@ -200,15 +208,29 @@
 
   <!-- __________________________________________ CONTENT __________________________________________ -->
 
-  <div id="content" class="container h-100 content">
+  <div class="page-content">
+    <div id="content" class="container h-100 content">
 
-    {% if header != 'none' %}
-    <h2>{{ title }}</h2>
-    {% endif %}
+      {% if header != 'none' %}
+      <h2>{{ title }}</h2>
+      {% endif %}
 
-    {%block content%}
+      {%block content%}
 
-    {%endblock%}
+      {%endblock%}
+
+
+    </div>
+
+    <footer class="text-center text-white">
+
+      <!-- Copyright -->
+      <div class="text-center p-3">
+        Got any questions?
+        <a class="text-white" href="https://t.me/casy7/">Me too.</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
   </div>
 </body>
 

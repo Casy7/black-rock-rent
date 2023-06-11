@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, re_path
 from django.urls import path
-# from django.conf.urls import url
 
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -31,7 +30,9 @@ urlpatterns = [
     path("add_equipment", AddEquipment.as_view(), name="add_equipment"),
     path("new_rent_accounting", CreateNewRentAccounting.as_view(), name="new_rent_accounting"),
     path("my_rent_accountings", MyRentAccountings.as_view(), name="my_rent_accountings"),
+    path("rent_accountings_management", RentAccountingsManagement.as_view(), name="rent_accountings_management"),
 	re_path('add_equipment/', AddNewEquipment.as_view(), name='add_equipment'),
+    re_path('set_rent_time/', SetRentTime.as_view(), name='set_rent_time'),
     
     path("signin/", Login.as_view(), name="login"),
     path("signout/", Logout.as_view(), name="logout"),
