@@ -12,9 +12,9 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.views.generic import View, TemplateView
 from django import forms
 from json import loads
-from BlackRockApp.code.classes import NewEquipment
+from RomantikApp.code.classes import NewEquipment
 
-from BlackRockProject.settings import BASE_DIR, DATABASE_PWD
+from RomantikProject.settings import BASE_DIR, DATABASE_PWD
 from .models import *
 from datetime import date, timedelta, datetime
 

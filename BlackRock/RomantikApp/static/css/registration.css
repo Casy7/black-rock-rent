@@ -63,12 +63,22 @@ input:focus {
     background-color: white;
 }
 
-.card-body{
+.card-body {
     box-sizing: content-box;
+    background-color: #393a3e;
+    border: none;
 }
+
 
 .error-message{
     color: rgb(235, 155, 64);
 }
 
+#content {
+    background-color: #212529d4;
+    height: 50rem;
+}
 
+.card .card-footer {
+    background-color: #c7c7d2;
+}

@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OldPriceOfEquipment',
             fields=[
-                ('equipment', models.OneToOneField(db_column='equipment', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='BlackRockApp.equipment')),
+                ('equipment', models.OneToOneField(db_column='equipment', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='RomantikApp.equipment')),
                 ('datetime', models.DateTimeField()),
                 ('price', models.DecimalField(blank=True, decimal_places=65535, max_digits=65535, null=True)),
             ],
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RentedCountableEquipment',
             fields=[
-                ('accounting', models.OneToOneField(db_column='accounting', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='BlackRockApp.rentaccounting')),
+                ('accounting', models.OneToOneField(db_column='accounting', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='RomantikApp.rentaccounting')),
                 ('amount', models.IntegerField()),
                 ('returned_amount', models.IntegerField()),
             ],
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RentedEquipment',
             fields=[
-                ('accounting', models.OneToOneField(db_column='accounting', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='BlackRockApp.rentaccounting')),
+                ('accounting', models.OneToOneField(db_column='accounting', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='RomantikApp.rentaccounting')),
                 ('deterioration', models.IntegerField()),
             ],
             options={
@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UniqueEquipment',
             fields=[
-                ('id', models.OneToOneField(db_column='id', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='BlackRockApp.equipment')),
+                ('id', models.OneToOneField(db_column='id', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='RomantikApp.equipment')),
                 ('deterioration', models.IntegerField()),
             ],
             options={

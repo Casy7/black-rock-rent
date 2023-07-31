@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class BlackRockappConfig(AppConfig):
+class RomantikappConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'BlackRockApp'
+    name = 'RomantikApp'

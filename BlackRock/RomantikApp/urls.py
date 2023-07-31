@@ -1,4 +1,4 @@
-"""BlackRockProject URL Configuration
+"""RomantikProject URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
 	https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -20,7 +20,7 @@ from django.urls import path
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from BlackRockProject import settings
+from RomantikProject import settings
 
 from .views import *
 
